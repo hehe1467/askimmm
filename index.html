@@ -1,0 +1,1670 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>For my askim c:</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #d3b1f6;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      max-width: 700px;
+      margin: auto;
+      background: rgb(184, 235, 246);
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .question {
+      margin-bottom: 20px;
+    }
+    .options button {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      margin: 5px 0;
+      background-color: #f4f4f4;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .options button.correct {
+      background-color: #00ff08;
+    }
+    .options button.wrong {
+      background-color: #ff0019;
+    }
+    .feedback {
+      margin-top: 10px;
+      font-weight: bold;
+    }
+    #restartBtn {
+      display: block;
+      margin: 30px auto 0;
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>TE AMO COK</h1>
+    <div id="quiz"></div>
+    <button id="restartBtn" onclick="startQuiz()">Soruları değiştirin c:</button>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        q: "İmanın şartları kaç tanedir?",
+        options: ["Altıdır.", "Beştir.", "Yedidir.", "Dörttür."],
+        a: "Altıdır."
+      },
+      {
+        q: "Kaza nedir?",
+        options: ["Kaderin zamanı gelince gerçekleşmesidir.", "İmanın şartlarından biridir.", "İbadetlerin bir çeşididir.", "Yalnızca ahirete ait bir kavramdır."],
+        a: "Kaderin zamanı gelince gerçekleşmesidir."
+      },
+      {
+        q: "Kader değişir mi?",
+        options: ["Hayır, kader değişmez; kaza değişebilir.", "Evet, değişir.", "Sadece dua ile değişir.", "Bilinemez."],
+        a: "Hayır, kader değişmez; kaza değişebilir."
+      },
+      {
+        q: "Meleklerin görevlerinden biri nedir?",
+        options: ["İnsanların amellerini yazmak.", "İnsanlara ibadet etmek.", "Peygamber olmak.", "Cenneti yönetmek."],
+        a: "İnsanların amellerini yazmak."
+      },
+      {
+        q: "Ahiret günü ile ilgili iman esasına ne denir?",
+        options: ["Âhirete iman.", "Kaza ve kader.", "Meleklere iman.", "İhsan."],
+        a: "Âhirete iman."
+      },
+      {
+        q: "Ruh nedir?",
+        options: ["Allah’ın emriyle bedene üflenen manevi varlıktır.", "Kalbin atışıdır.", "Aklın bir parçasıdır.", "İnsanın düşünceleridir."],
+        a: "Allah’ın emriyle bedene üflenen manevi varlıktır."
+      },
+      {
+        q: "İmanın rüknü nedir?",
+        options: ["Kalp ile tasdik.", "Dil ile söylemek.", "İbadet etmek.", "Meleklere inanmak."],
+        a: "Kalp ile tasdik."
+      },
+      {
+        q: "Mâturîdî ve Eş'arî kimdir?",
+        options: ["İtikâdî mezhep imamlarıdır.", "Fıkıh âlimleridir.", "Peygamber sahabeleridir.", "Hadis yazarlarıdır."],
+        a: "İtikâdî mezhep imamlarıdır."
+      },
+      {
+        q: "Tevhid nedir?",
+        options: ["Allah’ın birliğine inanmak ve bunu kabul etmektir.", "Cenneti anlatmaktır.", "Kıyamet bilgisidir.", "Kur’an'ı ezberlemektir."],
+        a: "Allah’ın birliğine inanmak ve bunu kabul etmektir."
+      },
+      {
+        q: "Zâtî sıfatlardan biri nedir?",
+        options: ["Vücûd (Allah’ın var olması).", "Hayat.", "İrade.", "Kelâm."],
+        a: "Vücûd (Allah’ın var olması)."
+      },
+      {
+        q: "Farz nedir?",
+        options: ["Allah’ın açıkça emrettiği ve yapılması kesin gerekli olan ibadetlerdir.", "Peygamberin yaptığı davranışlardır.", "Toplumda kabul gören geleneklerdir.", "Sevap kazandıran işlerdir."],
+        a: "Allah’ın açıkça emrettiği ve yapılması kesin gerekli olan ibadetlerdir."
+      },
+      {
+        q: "Namazın şartlarından biri hangisidir?",
+        options: ["Abdest almak.", "Sadaka vermek.", "Oruç tutmak.", "Hac yapmak."],
+        a: "Abdest almak."
+      },
+      {
+        q: "Oruç tutmak ne zaman farzdır?",
+        options: ["Ramazan ayında.", "Bayram günlerinde.", "Cuma günlerinde.", "Kurban Bayramı'nda."],
+        a: "Ramazan ayında."
+      },
+      {
+        q: "Zekat vermek ne zaman farz olur?",
+        options: ["Zenginlik ölçüsüne ulaşınca.", "Namaz kılınca.", "Hacca gidince.", "Kur’an okuyunca."],
+        a: "Zenginlik ölçüsüne ulaşınca."
+      },
+      {
+        q: "Abdestin farzlarından biri nedir?",
+        options: ["Yüzü yıkamak.", "Tırnak kesmek.", "Saç taramak.", "Ayağa mesh etmek."],
+        a: "Yüzü yıkamak."
+      },
+      {
+        q: "Gusül abdesti hangi durumda alınır?",
+        options: ["Cünüp olunduğunda.", "Yemek yemeden önce.", "Namazdan sonra.", "Uyumadan önce."],
+        a: "Cünüp olunduğunda."
+      },
+      {
+        q: "Namazda Fatiha suresi ne zaman okunur?",
+        options: ["Her rekâtta.", "Sadece sabah namazında.", "Sadece cuma namazında.", "Yalnız farzlarda."],
+        a: "Her rekâtta."
+      },
+      {
+        q: "Vitir namazı kaç rekâttır?",
+        options: ["Üç.", "İki.", "Dört.", "Beş."],
+        a: "Üç."
+      },
+      {
+        q: "Teyemmüm hangi durumda yapılır?",
+        options: ["Su bulunmadığında.", "Camideyken.", "Yemekten sonra.", "Oruç tutarken."],
+        a: "Su bulunmadığında."
+      },
+      {
+        q: "Cuma namazı hangi gün kılınır?",
+        options: ["Cuma.", "Pazartesi.", "Cumartesi.", "Pazar."],
+        a: "Cuma."
+      },
+      {
+        q: "İmsak vakti neyi ifade eder?",
+        options: ["Oruç başlama zamanını.", "Namaz bitiş zamanını.", "Güneşin doğuşunu.", "Bayramın başlangıcını."],
+        a: "Oruç başlama zamanını."
+      },
+      {
+        q: "Fitre nedir?",
+        options: ["Ramazan ayında verilen sadakadır.", "Kur’an okuma sevabıdır.", "Zekatın başka adıdır.", "Hacda yapılan bir ibadettir."],
+        a: "Ramazan ayında verilen sadakadır."
+      },
+      {
+        q: "Bayram namazı ne zaman kılınır?",
+        options: ["Bayram sabahı.", "Cuma akşamı.", "Ramazan’ın ortasında.", "Kurban kesilince."],
+        a: "Bayram sabahı."
+      },
+      {
+        q: "İkindi namazı kaç rekâttır?",
+        options: ["Sekiz.", "İki.", "Beş.", "Altı."],
+        a: "Sekiz."
+      },
+      {
+        q: "Teravih namazı hangi ayda kılınır?",
+        options: ["Ramazan.", "Muharrem.", "Şevval.", "Recep."],
+        a: "Ramazan."
+      },
+      {
+        q: "İstihâre nedir?",
+        options: ["Hayırlı olanı Allah’tan istemektir.", "Namazın bir çeşididir.", "Yemek duasıdır.", "Kur’an’daki sure adıdır."],
+        a: "Hayırlı olanı Allah’tan istemektir."
+      },
+      {
+        q: "Sadaka-i fıtır kimlere verilir?",
+        options: ["Fakir ve muhtaçlara.", "Zengin akrabalara.", "Çocuklara.", "Kendine."],
+        a: "Fakir ve muhtaçlara."
+      },
+      {
+        q: "Kurban Bayramı’nda hangi ibadet yapılır?",
+        options: ["Kurban kesmek.", "Zekat vermek.", "Oruç tutmak.", "Teravih kılmak."],
+        a: "Kurban kesmek."
+      },
+      {
+        q: "Hac hangi ayda yapılır?",
+        options: ["Zilhicce.", "Ramazan.", "Recep.", "Şaban."],
+        a: "Zilhicce."
+      },
+      {
+        q: "İhram nedir?",
+        options: ["Hacca veya Umreye başlarken niyet edip bazı şeyleri kendine yasaklamaktır.", "Bayram namazı kılmaktır.", "Cuma hutbesi dinlemektir.", "Kurban kesmektir."],
+        a: "Hacca veya Umreye başlarken niyet edip bazı şeyleri kendine yasaklamaktır."
+      },
+      {
+        q: "Tavaf ne demektir?",
+        options: ["Kâbe’nin etrafında dönmektir.", "Mekke’ye gitmektir.", "Namaz kılmaktır.", "Dua etmektir."],
+        a: "Kâbe’nin etrafında dönmektir."
+      },
+      {
+        q: "Sa’y nedir?",
+        options: ["Safa ile Merve tepeleri arasında yedi defa gidip gelmektir.", "Namaz kılmaktır.", "Kurban kesmektir.", "Zekat vermektir."],
+        a: "Safa ile Merve tepeleri arasında yedi defa gidip gelmektir."
+      },
+      {
+        q: "Arafat vakfesi ne zaman yapılır?",
+        options: ["Zilhicce’nin 9. günü.", "Ramazan’ın 27. gecesi.", "Bayram sabahı.", "Kurban Bayramı'ndan bir gün önce."],
+        a: "Zilhicce’nin 9. günü."
+      },
+      {
+        q: "Hac farz olan kimseye ne denir?",
+        options: ["Mükellef.", "Zengin.", "Fakih.", "Salih."],
+        a: "Mükellef."
+      },
+      {
+        q: "Umre ne zaman yapılabilir?",
+        options: ["Yılın her zamanı.", "Sadece Ramazan’da.", "Kurban Bayramı’nda.", "Sadece Recep ayında."],
+        a: "Yılın her zamanı."
+      },
+      {
+        q: "İhramlı iken ne yasaktır?",
+        options: ["Tıraş olmak.", "Abdest almak.", "Yemek yemek.", "Dua etmek."],
+        a: "Tıraş olmak."
+      },
+      {
+        q: "Hadis nedir?",
+        options: ["Peygamberimizin söz, fiil ve onaylarıdır.", "Kur’an ayetleridir.", "Fıkıh kitaplarıdır.", "Kıssalardır."],
+        a: "Peygamberimizin söz, fiil ve onaylarıdır."
+      },
+      {
+        q: "Ahlak nedir?",
+        options: ["İnsanın huy ve karakteridir.", "İbadetin bir parçasıdır.", "Sadece namazda gerekli olan şeydir.", "Toplum kurallarıdır."],
+        a: "İnsanın huy ve karakteridir."
+      },
+      {
+        q: "Kur’an-ı Kerim kaç sureden oluşur?",
+        options: ["114.", "99.", "100.", "120."],
+        a: "114."
+      },
+      {
+        q: "En uzun sure hangisidir?",
+        options: ["Bakara Suresi.", "Yasin Suresi.", "Fatiha Suresi.", "Nisa Suresi."],
+        a: "Bakara Suresi."
+      },
+      {
+        q: "İhsan nedir?",
+        options: ["Allah’ı görüyormuş gibi ibadet etmektir.", "Sadaka vermektir.", "Yardım etmektir.", "Hacca gitmektir."],
+        a: "Allah’ı görüyormuş gibi ibadet etmektir."
+      },
+      {
+        q: "Güzel ahlakın kaynağı nedir?",
+        options: ["Kur’an ve Sünnet.", "Toplum örfleri.", "Aile büyükleri.", "Tarih kitapları."],
+        a: "Kur’an ve Sünnet."
+      },
+      {
+        q: "Mümin kimdir?",
+        options: ["Allah’a ve peygamberine iman eden kişidir.", "Zengin olan kimsedir.", "Sadece namaz kılan kişidir.", "Sadaka veren kişidir."],
+        a: "Allah’a ve peygamberine iman eden kişidir."
+      },
+      {
+        q: "Salih amel nedir?",
+        options: ["Allah rızası için yapılan güzel işlerdir.", "Namazdır.", "Sadece oruç tutmaktır.", "Dua etmektir."],
+        a: "Allah rızası için yapılan güzel işlerdir."
+      },
+      {
+        q: "İman nedir?",
+        options: ["Kalp ile inanmak ve dil ile söylemektir.", "Namaz kılmak.", "Hacca gitmek.", "Kur’an okumaktır."],
+        a: "Kalp ile inanmak ve dil ile söylemektir."
+      },
+      {
+        q: "Namazın farzlarından biri nedir?",
+        options: ["Niyet etmek", "Abdest almak", "Camiye gitmek", "Tesbih çekmek"],
+        a: "Niyet etmek"
+      },
+      {
+        q: "Oruç ne zaman farz olmuştur?",
+        options: ["Ramazan ayında", "Hicretin ikinci yılında", "Cuma günü", "Kurban Bayramı'nda"],
+        a: "Hicretin ikinci yılında"
+      },
+      {
+        q: "Zekât kimlere verilir?",
+        options: ["Fakir ve muhtaçlara", "Zenginlere", "İmam ve müezzine", "Devlete"],
+        a: "Fakir ve muhtaçlara"
+      },
+      {
+        q: "Hac ibadeti ne zaman yapılır?",
+        options: ["Zilhicce ayında", "Ramazan ayında", "Muharrem ayında", "Recep ayında"],
+        a: "Zilhicce ayında"
+      },
+      {
+        q: "İslam’da ilk vahiy nereye gelmiştir?",
+        options: ["Hira Mağarası", "Mekke", "Medine", "Mescid-i Aksa"],
+        a: "Hira Mağarası"
+      },
+      {
+        q: "Kur’an-ı Kerim’in ilk suresi nedir?",
+        options: ["Fatiha", "Bakara", "İhlas", "Yasin"],
+        a: "Fatiha"
+      },
+      {
+        q: "Kur’an’da kaç sure vardır?",
+        options: ["114", "99", "100", "101"],
+        a: "114"
+      },
+      {
+        q: "Hadis nedir?",
+        options: ["Peygamberimizin söz, fiil ve takrirleridir.", "Sahabelerin sözleridir.", "Tefsir ilmidir.", "Mezhep kurallarıdır."],
+        a: "Peygamberimizin söz, fiil ve takrirleridir."
+      },
+      {
+        q: "Ahlaklı bir insan nasıl davranır?",
+        options: ["Doğru, dürüst ve merhametli olur.", "Sadece ibadet eder.", "Suskun ve içine kapanıktır.", "Sürekli eleştirir."],
+        a: "Doğru, dürüst ve merhametli olur."
+      },
+      {
+        q: "Peygamber Efendimiz’in lakabı nedir?",
+        options: ["El-Emin", "El-Karim", "El-Aziz", "El-Hakim"],
+        a: "El-Emin"
+      },
+      {
+        q: "Namaz kaç vakittir?",
+        options: ["Beş", "Altı", "Yedi", "Dört"],
+        a: "Beş"
+      },
+      {
+        q: "Zekât oranı nedir?",
+        options: ["%2.5", "%10", "%5", "%15"],
+        a: "%2.5"
+      },
+      {
+        q: "Kurban bayramında ne yapılır?",
+        options: ["Hayvan kurban edilir.", "Oruç tutulur.", "Namaz terk edilir.", "Hacca gidilir."],
+        a: "Hayvan kurban edilir."
+      },
+      {
+        q: "Ramazan orucu ne zaman tutulur?",
+        options: ["Ramazan ayında", "Zilhicce ayında", "Recep ayında", "Şaban ayında"],
+        a: "Ramazan ayında"
+      },
+      {
+        q: "İslam’ın beş şartından biri değildir:",
+        options: ["İhsan", "Namaz", "Zekât", "Oruç"],
+        a: "İhsan"
+      },
+      {
+        q: "Teyemmüm ne zaman yapılır?",
+        options: ["Su bulunmadığında", "Abdest alırken", "Namazdan sonra", "Bayramda"],
+        a: "Su bulunmadığında"
+      },
+      {
+        q: "Kur’an-ı Kerim ne kadar sürede indirilmiştir?",
+        options: ["23 yılda", "10 yılda", "40 günde", "12 ayda"],
+        a: "23 yılda"
+      },
+      {
+        q: "İslam’da içki içmek:",
+        options: ["Haramdır", "Mubahtır", "Mekruhtur", "Farzdır"],
+        a: "Haramdır"
+      },
+      {
+        q: "Mümin kime denir?",
+        options: ["Allah’a inanan kimseye", "Her namaz kılana", "Oruç tutana", "Zengin olana"],
+        a: "Allah’a inanan kimseye"
+      },
+      {
+        q: "İslam’a göre anne-babaya nasıl davranılmalıdır?",
+        options: ["Saygılı ve merhametli olunmalıdır.", "Bağırılabilir.", "Sadece dinlenir.", "İlgilenilmez."],
+        a: "Saygılı ve merhametli olunmalıdır."
+      },
+      {
+        q: "İslam’ın ilk şartı nedir?",
+        options: ["Kelime-i Şehadet getirmek", "Namaz kılmak", "Zekât vermek", "Hacca gitmek"],
+        a: "Kelime-i Şehadet getirmek"
+      },
+      {
+        q: "İslam’da en faziletli gece hangisidir?",
+        options: ["Kadir Gecesi", "Miraç Gecesi", "Berat Gecesi", "Regaib Gecesi"],
+        a: "Kadir Gecesi"
+      },
+      {
+        q: "Allah’ın 99 ismine ne denir?",
+        options: ["Esmaü’l Hüsna", "İhlas", "Fatiha", "Sıfat"],
+        a: "Esmaü’l Hüsna"
+      },
+      {
+        q: "İslam’da helal ne demektir?",
+        options: ["Yapılmasına izin verilmiş şey", "Yasak olan şey", "Boş şey", "Günah olan şey"],
+        a: "Yapılmasına izin verilmiş şey"
+      },
+      {
+        q: "İslam’da en önemli kitap nedir?",
+        options: ["Kur’an-ı Kerim", "Tevrat", "İncil", "Zebur"],
+        a: "Kur’an-ı Kerim"
+      },
+      {
+        q: "Hz. Muhammed’e ilk inanan kimdir?",
+        options: ["Hz. Hatice", "Hz. Aişe", "Hz. Ali", "Hz. Ebubekir"],
+        a: "Hz. Hatice"
+      },
+      {
+        q: "İslam’a göre en büyük günah nedir?",
+        options: ["Allah’a ortak koşmak", "Yalan söylemek", "İçki içmek", "Hırsızlık"],
+        a: "Allah’a ortak koşmak"
+      },
+      {
+        q: "İslam’da gusül abdesti ne zaman alınır?",
+        options: ["Cünüplükten sonra", "Namazdan önce", "Yemekten önce", "Bayramdan sonra"],
+        a: "Cünüplükten sonra"
+      },
+      {
+        q: "Abdestin farzlarından biri değildir:",
+        options: ["Ayakları yıkamak", "Saçı taramak", "Yüzü yıkamak", "Kolları yıkamak"],
+        a: "Saçı taramak"
+      },
+      {
+        q: "Kıble ne tarafa doğrudur?",
+        options: ["Kâbe’nin bulunduğu yöne", "Doğuya", "Batıya", "Kuzeye"],
+        a: "Kâbe’nin bulunduğu yöne"
+      },
+      {
+        q: "Tövbe nedir?",
+        options: ["Günahına pişman olup af dilemektir.", "İbadet etmek", "Sadaka vermek", "Oruç tutmak"],
+        a: "Günahına pişman olup af dilemektir."
+      },
+      {
+        q: "Cuma namazı kimlere farzdır?",
+        options: ["Erkek Müslümanlara", "Kadınlara", "Çocuklara", "Yolculara"],
+        a: "Erkek Müslümanlara"
+      },
+      {
+        q: "İslam’da en önemli ibadetlerden biri nedir?",
+        options: ["Namaz", "Yemek", "Uyumak", "Sohbet"],
+        a: "Namaz"
+      },
+      {
+        q: "Şirk ne demektir?",
+        options: ["Allah’a ortak koşmak", "Sadaka vermek", "Dua etmek", "Tevazu göstermek"],
+        a: "Allah’a ortak koşmak"
+      },
+      {
+        q: "İslam’a göre yalan söylemek:",
+        options: ["Günahtır", "Caizdir", "Farzdır", "Sevaptır"],
+        a: "Günahtır"
+      },
+      {
+        q: "Namazın farzlarından biri nedir?",
+        options: ["Niyet etmek", "Abdest almak", "Camiye gitmek", "Tesbih çekmek"],
+        a: "Niyet etmek"
+      },
+      {
+        q: "Oruç ne zaman farz olmuştur?",
+        options: ["Ramazan ayında", "Hicretin ikinci yılında", "Cuma günü", "Kurban Bayramı'nda"],
+        a: "Hicretin ikinci yılında"
+      },
+      {
+        q: "Zekât kimlere verilir?",
+        options: ["Fakir ve muhtaçlara", "Zenginlere", "İmam ve müezzine", "Devlete"],
+        a: "Fakir ve muhtaçlara"
+      },
+      {
+        q: "Hac ibadeti ne zaman yapılır?",
+        options: ["Zilhicce ayında", "Ramazan ayında", "Muharrem ayında", "Recep ayında"],
+        a: "Zilhicce ayında"
+      },
+      {
+        q: "İslam’da ilk vahiy nereye gelmiştir?",
+        options: ["Hira Mağarası", "Mekke", "Medine", "Mescid-i Aksa"],
+        a: "Hira Mağarası"
+      },
+      {
+        q: "Kur’an-ı Kerim’in ilk suresi nedir?",
+        options: ["Fatiha", "Bakara", "İhlas", "Yasin"],
+        a: "Fatiha"
+      },
+      {
+        q: "Kur’an’da kaç sure vardır?",
+        options: ["114", "99", "100", "101"],
+        a: "114"
+      },
+      {
+        q: "Hadis nedir?",
+        options: ["Peygamberimizin söz, fiil ve takrirleridir.", "Sahabelerin sözleridir.", "Tefsir ilmidir.", "Mezhep kurallarıdır."],
+        a: "Peygamberimizin söz, fiil ve takrirleridir."
+      },
+      {
+        q: "Ahlaklı bir insan nasıl davranır?",
+        options: ["Doğru, dürüst ve merhametli olur.", "Sadece ibadet eder.", "Suskun ve içine kapanıktır.", "Sürekli eleştirir."],
+        a: "Doğru, dürüst ve merhametli olur."
+      },
+      {
+        q: "Peygamber Efendimiz’in lakabı nedir?",
+        options: ["El-Emin", "El-Karim", "El-Aziz", "El-Hakim"],
+        a: "El-Emin"
+      },
+      {
+        q: "Namaz kaç vakittir?",
+        options: ["Beş", "Altı", "Yedi", "Dört"],
+        a: "Beş"
+      },
+      {
+        q: "Zekât oranı nedir?",
+        options: ["%2.5", "%10", "%5", "%15"],
+        a: "%2.5"
+      },
+      {
+        q: "Kurban bayramında ne yapılır?",
+        options: ["Hayvan kurban edilir.", "Oruç tutulur.", "Namaz terk edilir.", "Hacca gidilir."],
+        a: "Hayvan kurban edilir."
+      },
+      {
+        q: "Ramazan orucu ne zaman tutulur?",
+        options: ["Ramazan ayında", "Zilhicce ayında", "Recep ayında", "Şaban ayında"],
+        a: "Ramazan ayında"
+      },
+      {
+        q: "İslam’ın beş şartından biri değildir:",
+        options: ["İhsan", "Namaz", "Zekât", "Oruç"],
+        a: "İhsan"
+      },
+      {
+        q: "Teyemmüm ne zaman yapılır?",
+        options: ["Su bulunmadığında", "Abdest alırken", "Namazdan sonra", "Bayramda"],
+        a: "Su bulunmadığında"
+      },
+      {
+        q: "Kur’an-ı Kerim ne kadar sürede indirilmiştir?",
+        options: ["23 yılda", "10 yılda", "40 günde", "12 ayda"],
+        a: "23 yılda"
+      },
+      {
+        q: "İslam’da içki içmek:",
+        options: ["Haramdır", "Mubahtır", "Mekruhtur", "Farzdır"],
+        a: "Haramdır"
+      },
+      {
+        q: "Mümin kime denir?",
+        options: ["Allah’a inanan kimseye", "Her namaz kılana", "Oruç tutana", "Zengin olana"],
+        a: "Allah’a inanan kimseye"
+      },
+      {
+        q: "İslam’a göre anne-babaya nasıl davranılmalıdır?",
+        options: ["Saygılı ve merhametli olunmalıdır.", "Bağırılabilir.", "Sadece dinlenir.", "İlgilenilmez."],
+        a: "Saygılı ve merhametli olunmalıdır."
+      },
+      {
+        q: "İslam’ın ilk şartı nedir?",
+        options: ["Kelime-i Şehadet getirmek", "Namaz kılmak", "Zekât vermek", "Hacca gitmek"],
+        a: "Kelime-i Şehadet getirmek"
+      },
+      {
+        q: "İslam’da en faziletli gece hangisidir?",
+        options: ["Kadir Gecesi", "Miraç Gecesi", "Berat Gecesi", "Regaib Gecesi"],
+        a: "Kadir Gecesi"
+      },
+      {
+        q: "Allah’ın 99 ismine ne denir?",
+        options: ["Esmaü’l Hüsna", "İhlas", "Fatiha", "Sıfat"],
+        a: "Esmaü’l Hüsna"
+      },
+      {
+        q: "İslam’da helal ne demektir?",
+        options: ["Yapılmasına izin verilmiş şey", "Yasak olan şey", "Boş şey", "Günah olan şey"],
+        a: "Yapılmasına izin verilmiş şey"
+      },
+      {
+        q: "İslam’da en önemli kitap nedir?",
+        options: ["Kur’an-ı Kerim", "Tevrat", "İncil", "Zebur"],
+        a: "Kur’an-ı Kerim"
+      },
+      {
+        q: "Hz. Muhammed’e ilk inanan kimdir?",
+        options: ["Hz. Hatice", "Hz. Aişe", "Hz. Ali", "Hz. Ebubekir"],
+        a: "Hz. Hatice"
+      },
+      {
+        q: "İslam’a göre en büyük günah nedir?",
+        options: ["Allah’a ortak koşmak", "Yalan söylemek", "İçki içmek", "Hırsızlık"],
+        a: "Allah’a ortak koşmak"
+      },
+      {
+        q: "İslam’da gusül abdesti ne zaman alınır?",
+        options: ["Cünüplükten sonra", "Namazdan önce", "Yemekten önce", "Bayramdan sonra"],
+        a: "Cünüplükten sonra"
+      },
+      {
+        q: "Abdestin farzlarından biri değildir:",
+        options: ["Ayakları yıkamak", "Saçı taramak", "Yüzü yıkamak", "Kolları yıkamak"],
+        a: "Saçı taramak"
+      },
+      {
+        q: "Kıble ne tarafa doğrudur?",
+        options: ["Kâbe’nin bulunduğu yöne", "Doğuya", "Batıya", "Kuzeye"],
+        a: "Kâbe’nin bulunduğu yöne"
+      },
+      {
+        q: "Tövbe nedir?",
+        options: ["Günahına pişman olup af dilemektir.", "İbadet etmek", "Sadaka vermek", "Oruç tutmak"],
+        a: "Günahına pişman olup af dilemektir."
+      },
+      {
+        q: "Cuma namazı kimlere farzdır?",
+        options: ["Erkek Müslümanlara", "Kadınlara", "Çocuklara", "Yolculara"],
+        a: "Erkek Müslümanlara"
+      },
+      {
+        q: "İslam’da en önemli ibadetlerden biri nedir?",
+        options: ["Namaz", "Yemek", "Uyumak", "Sohbet"],
+        a: "Namaz"
+      },
+      {
+        q: "Şirk ne demektir?",
+        options: ["Allah’a ortak koşmak", "Sadaka vermek", "Dua etmek", "Tevazu göstermek"],
+        a: "Allah’a ortak koşmak"
+      },
+      {
+        q: "İslam’a göre yalan söylemek:",
+        options: ["Günahtır", "Caizdir", "Farzdır", "Sevaptır"],
+        a: "Günahtır"
+      },
+      {
+        q: "Namazın farzlarından biri nedir?",
+        options: ["Niyet etmek", "Tesbih çekmek", "Abdest almak", "Yasin okumak"],
+        a: "Niyet etmek"
+      },
+      {
+        q: "Oruç hangi ayda farz kılınmıştır?",
+        options: ["Ramazan", "Muharrem", "Recep", "Şaban"],
+        a: "Ramazan"
+      },
+      {
+        q: "Zekat kimlere farzdır?",
+        options: ["Zengin Müslümanlara", "Tüm insanlara", "Çocuklara", "Gayrimüslimlere"],
+        a: "Zengin Müslümanlara"
+      },
+      {
+        q: "Hac ibadeti ne zaman yapılır?",
+        options: ["Zilhicce ayında", "Ramazan ayında", "Şevval ayında", "Recep ayında"],
+        a: "Zilhicce ayında"
+      },
+      {
+        q: "Namazın içindeki farzlardan biri nedir?",
+        options: ["Kıyam (ayakta durmak)", "Ezan okumak", "Salavat getirmek", "Tesbih çekmek"],
+        a: "Kıyam (ayakta durmak)"
+      },
+      {
+        q: "İmsak nedir?",
+        options: ["Oruç başlamadan önceki son vakittir", "Bayram namazı vakti", "Akşam ezanı", "Sabah ezanından sonra okunur"],
+        a: "Oruç başlamadan önceki son vakittir"
+      },
+      {
+        q: "Vitir namazı kaç rekattır?",
+        options: ["Üç", "Beş", "İki", "Dört"],
+        a: "Üç"
+      },
+      {
+        q: "Oruç tutmak hangi şartla farz olur?",
+        options: ["Akıllı ve ergen olmak", "Zengin olmak", "Yolcu olmak", "Hasta olmak"],
+        a: "Akıllı ve ergen olmak"
+      },
+      {
+        q: "Zekat neyin üzerinden verilir?",
+        options: ["Malların ve paranın", "Evlerin", "Giysilerin", "Kitapların"],
+        a: "Malların ve paranın"
+      },
+      {
+        q: "Teravih namazı ne zaman kılınır?",
+        options: ["Ramazan ayında", "Cuma günleri", "Bayramda", "Her gece"],
+        a: "Ramazan ayında"
+      },
+      {
+        q: "Abdestte farz olan organlardan biri nedir?",
+        options: ["Yüz", "Boyun", "Ayak bileği", "Göğüs"],
+        a: "Yüz"
+      },
+      {
+        q: "Namazı bozan durumlardan biri nedir?",
+        options: ["Konuşmak", "Nefes almak", "Başını kaşımak", "Yavaş hareket etmek"],
+        a: "Konuşmak"
+      },
+      {
+        q: "Farz namazlardan biri nedir?",
+        options: ["Sabah namazı", "Teheccüd namazı", "Duha namazı", "Evvabin namazı"],
+        a: "Sabah namazı"
+      },
+      {
+        q: "Hangi vakitte namaz kılmak mekruhtur?",
+        options: ["Güneş doğarken", "İkindi vakti", "Akşam vakti", "Yatsıdan sonra"],
+        a: "Güneş doğarken"
+      },
+      {
+        q: "Kurban Bayramı kaç gün sürer?",
+        options: ["Dört gün", "Üç gün", "Beş gün", "İki gün"],
+        a: "Dört gün"
+      },
+      {
+        q: "İmam kimdir?",
+        options: ["Namazı cemaatle kıldıran kişidir", "Müezzindir", "Kuran okuyan kişi", "Hadis yazarı"],
+        a: "Namazı cemaatle kıldıran kişidir"
+      },
+      {
+        q: "Taharet ne demektir?",
+        options: ["Temizlik", "Sadaka", "Yemek", "Namaz"],
+        a: "Temizlik"
+      },
+      {
+        q: "Hangi suyla abdest alınmaz?",
+        options: ["Kirli su", "Yağmur suyu", "Kuyu suyu", "Kar suyu"],
+        a: "Kirli su"
+      },
+      {
+        q: "Namazda kaç defa secde yapılır?",
+        options: ["İki", "Bir", "Üç", "Dört"],
+        a: "İki"
+      },
+      {
+        q: "Cuma namazı kaç rekattır?",
+        options: ["İki farz, dört sünnetle toplam altı", "Dört", "Sekiz", "Beş"],
+        a: "İki farz, dört sünnetle toplam altı"
+      },
+      {
+        q: "Hadesten taharet neyi ifade eder?",
+        options: ["Abdest veya gusül ile temizlenmeyi", "Yemek yemeyi", "Sadaka vermeyi", "Oruç tutmayı"],
+        a: "Abdest veya gusül ile temizlenmeyi"
+      },
+      {
+        q: "Kıraat ne demektir?",
+        options: ["Namazda Kur’an’dan ayet okumak", "Oruç tutmak", "Sadaka vermek", "Namaz kılmak"],
+        a: "Namazda Kur’an’dan ayet okumak"
+      },
+      {
+        q: "Ramazan ayında oruç ne zaman bozulur?",
+        options: ["İmsak vaktinden sonra yiyip içilirse", "Gece rüya görülürse", "Yemek hazırlanırsa", "Kur’an okunursa"],
+        a: "İmsak vaktinden sonra yiyip içilirse"
+      },
+      {
+        q: "Hangi ibadet bedensel ve malîdir?",
+        options: ["Hac", "Namaz", "Oruç", "Teheccüd"],
+        a: "Hac"
+      },
+      {
+        q: "Bayram namazı kaç rekattır?",
+        options: ["İki", "Dört", "Altı", "Üç"],
+        a: "İki"
+      },
+      {
+        q: "Teşrik tekbirleri ne zaman getirilir?",
+        options: ["Kurban Bayramı’nda", "Ramazan Bayramı’nda", "Miraç Gecesi'nde", "Berat Kandili'nde"],
+        a: "Kurban Bayramı’nda"
+      },
+      {
+        q: "İftarda dua etmek ...",
+        options: ["Sünnettir", "Farzdır", "Yasaktır", "Mekruhtur"],
+        a: "Sünnettir"
+      },
+      {
+        q: "Farz olan oruç kaç gündür?",
+        options: ["Ramazan boyunca 29 veya 30 gün", "10 gün", "40 gün", "7 gün"],
+        a: "Ramazan boyunca 29 veya 30 gün"
+      },
+      {
+        q: "Ramazan ayında oruç tutamayan ne yapar?",
+        options: ["Fidye verir", "Zekat verir", "Sadaka verir", "Namaz kılar"],
+        a: "Fidye verir"
+      },
+      {
+        q: "İtikâf ne zaman yapılır?",
+        options: ["Ramazan’ın son on gününde", "Kurban Bayramı’nda", "Recep ayında", "Berat Kandili'nde"],
+        a: "Ramazan’ın son on gününde"
+      },
+      {
+        q: "İmsak ile iftar arasında geçen zamana ne denir?",
+        options: ["Oruç vakti", "Namaz vakti", "Teheccüd vakti", "Tahajjud vakti"],
+        a: "Oruç vakti"
+      },
+      {
+        q: "Gusül abdesti alırken nelere dikkat edilir?",
+        options: ["Tüm bedenin yıkanması gerekir", "Sadece ayaklar yıkanır", "Yüz yıkanır", "Abdest alınmaz"],
+        a: "Tüm bedenin yıkanması gerekir"
+      },
+      {
+        q: "Sahur nedir?",
+        options: ["Oruç tutmadan önce yenen yemektir", "İftar yemeğidir", "Namaz vakti", "Bayram sabahıdır"],
+        a: "Oruç tutmadan önce yenen yemektir"
+      },
+      {
+        q: "Vacip ne demektir?",
+        options: ["Yapılması kesin delil ile sabit olan ibadettir", "Yapılması yasak olan şeydir", "Sevap olmayan işlerdir", "Günah olan işlerdir"],
+        a: "Yapılması kesin delil ile sabit olan ibadettir"
+      },
+      {
+        q: "Müslümanların kıblesi neresidir?",
+        options: ["Kâbe", "Mescid-i Aksa", "Medine", "Kudüs"],
+        a: "Kâbe"
+      },
+      {
+        q: "İslam'da ilk vahiy nerede geldi?",
+        options: ["Hira Mağarası", "Mescid-i Haram", "Kâbe", "Medine"],
+        a: "Hira Mağarası"
+      },
+      {
+        q: "Peygamberimizin babasının adı nedir?",
+        options: ["Abdullah", "Ebu Talib", "Abdulmuttalib", "Ali"],
+        a: "Abdullah"
+      },
+      {
+        q: "Hz. Muhammed’in hicret ettiği şehir neresidir?",
+        options: ["Medine", "Taif", "Kudüs", "Mekke"],
+        a: "Medine"
+      },
+      {
+        q: "Hz. Muhammed’e ilk inanan erkek kimdir?",
+        options: ["Hz. Ebubekir", "Hz. Ali", "Hz. Osman", "Hz. Ömer"],
+        a: "Hz. Ali"
+      },
+      {
+        q: "İslam’ın beş şartından biri değildir:",
+        options: ["Cihad etmek", "Namaz kılmak", "Oruç tutmak", "Zekat vermek"],
+        a: "Cihad etmek"
+      },
+      {
+        q: "Kur’an-ı Kerim’in ilk suresi hangisidir?",
+        options: ["Fâtiha", "Bakara", "İhlas", "Nas"],
+        a: "Fâtiha"
+      },
+      {
+        q: "Kur’an’da kaç sure vardır?",
+        options: ["114", "100", "99", "124"],
+        a: "114"
+      },
+      {
+        q: "Hadis ne demektir?",
+        options: ["Peygamberimizin söz, fiil ve onayları", "Kur’an ayetleri", "Sahabelerin sözleri", "Tefsir açıklamaları"],
+        a: "Peygamberimizin söz, fiil ve onayları"
+      },
+      {
+        q: "Sahabe kimdir?",
+        options: ["Peygamberimizi gören ve iman eden kişi", "Peygamberin ailesi", "Cennetlik olanlar", "Alim olan herkes"],
+        a: "Peygamberimizi gören ve iman eden kişi"
+      },
+      {
+        q: "Hicri takvimin başlangıcı neye dayanır?",
+        options: ["Hicret", "Doğum", "Vefat", "İlk vahiy"],
+        a: "Hicret"
+      },
+      {
+        q: "Peygamberimiz kaç yaşında vefat etti?",
+        options: ["63", "60", "66", "50"],
+        a: "63"
+      },
+      {
+        q: "İslam’a davet ilk kimlerle başladı?",
+        options: ["Aile bireyleriyle", "Mekke halkıyla", "Yahudilerle", "Ensarla"],
+        a: "Aile bireyleriyle"
+      },
+      {
+        q: "Ensar kimdir?",
+        options: ["Medineli Müslümanlar", "Mekkeliler", "Yahudiler", "Muhacirler"],
+        a: "Medineli Müslümanlar"
+      },
+      {
+        q: "Muhacir kimdir?",
+        options: ["Mekke’den Medine’ye hicret eden Müslümanlar", "Medineliler", "Yahudiler", "Putperestler"],
+        a: "Mekke’den Medine’ye hicret eden Müslümanlar"
+      },
+      {
+        q: "Hz. Muhammed’e verilen en büyük mucize nedir?",
+        options: ["Kur’an-ı Kerim", "Ayın yarılması", "İsra ve Miraç", "Su fışkırtması"],
+        a: "Kur’an-ı Kerim"
+      },
+      {
+        q: "Kadir Gecesi hangi ay içerisindedir?",
+        options: ["Ramazan", "Şaban", "Recep", "Zilhicce"],
+        a: "Ramazan"
+      },
+      {
+        q: "İslam'da ilk inen ayet hangi suredendir?",
+        options: ["Alak", "Fatiha", "Bakara", "İhlas"],
+        a: "Alak"
+      },
+      {
+        q: "Miraç hadisesi nedir?",
+        options: ["Peygamberimizin göğe yükselmesidir", "İlk vahiy", "Medine’ye hicret", "Bedir Savaşı"],
+        a: "Peygamberimizin göğe yükselmesidir"
+      },
+      {
+        q: "Peygamberimizin annesinin adı nedir?",
+        options: ["Âmine", "Hatice", "Fatıma", "Esma"],
+        a: "Âmine"
+      },
+      {
+        q: "Hz. Hatice kimdir?",
+        options: ["Peygamberimizin ilk eşidir", "Annesidir", "Kızıdır", "Sahabedir"],
+        a: "Peygamberimizin ilk eşidir"
+      },
+      {
+        q: "Hz. Aişe kimdir?",
+        options: ["Peygamberimizin eşlerinden biridir", "Annesidir", "Kızıdır", "Teyzesidir"],
+        a: "Peygamberimizin eşlerinden biridir"
+      },
+      {
+        q: "Bedir Savaşı ne zaman yapıldı?",
+        options: ["Hicretin 2. yılı", "Hicretin 1. yılı", "Hicretin 3. yılı", "Hicretin 5. yılı"],
+        a: "Hicretin 2. yılı"
+      },
+      {
+        q: "Uhud Savaşı sonucu ne oldu?",
+        options: ["Müslümanlar geri çekildi", "Kesin zafer", "Mekke alındı", "Barış yapıldı"],
+        a: "Müslümanlar geri çekildi"
+      },
+      {
+        q: "Hendek Savaşı ne ile ünlüdür?",
+        options: ["Savunmada hendek kazılmasıyla", "Mekke'nin fethiyle", "Barışla", "Peygamberin mucizesiyle"],
+        a: "Savunmada hendek kazılmasıyla"
+      },
+      {
+        q: "Hudeybiye Antlaşması ne zaman yapıldı?",
+        options: ["Hicretin 6. yılı", "Hicretin 3. yılı", "Hicretin 7. yılı", "Hicretin 2. yılı"],
+        a: "Hicretin 6. yılı"
+      },
+      {
+        q: "Mekke ne zaman fethedildi?",
+        options: ["Hicretin 8. yılı", "Hicretin 10. yılı", "Hicretin 5. yılı", "Hicretin 6. yılı"],
+        a: "Hicretin 8. yılı"
+      },
+      {
+        q: "Veda Hutbesi nerede verildi?",
+        options: ["Arafat", "Mina", "Mekke", "Medine"],
+        a: "Arafat"
+      },
+      {
+        q: "Hz. Peygamberin doğduğu şehir neresidir?",
+        options: ["Mekke", "Medine", "Taif", "Kudüs"],
+        a: "Mekke"
+      },
+      {
+        q: "Hz. Peygamberin mezarı nerededir?",
+        options: ["Medine", "Mekke", "Kudüs", "Taif"],
+        a: "Medine"
+      },
+      {
+        q: "İlk Müslüman kadın kimdir?",
+        options: ["Hz. Hatice", "Hz. Fatıma", "Hz. Aişe", "Hz. Esma"],
+        a: "Hz. Hatice"
+      },
+      {
+        q: "Hz. Fatıma kimdir?",
+        options: ["Peygamberimizin kızıdır", "Eşidir", "Teyzesidir", "Sahabedir"],
+        a: "Peygamberimizin kızıdır"
+      },
+      {
+        q: "Hz. Ali kimdir?",
+        options: ["Peygamberimizin damadı ve halifedir", "Sahabedir", "Annesidir", "Amcasıdır"],
+        a: "Peygamberimizin damadı ve halifedir"
+      },
+      {
+        q: "Hz. Ebu Bekir kimdir?",
+        options: ["İlk halifedir", "İlk peygamber", "İlk sahabi", "Müezzin"],
+        a: "İlk halifedir"
+      },
+      {
+        q: "Namazın farzlarından biri değildir:",
+        options: ["Abdestli olmak", "Kıbleye dönmek", "Dua okumak", "Setr-i avret"],
+        a: "Dua okumak"
+      },
+      {
+        q: "Abdestin farzlarından biri nedir?",
+        options: ["Yüzü yıkamak", "Ayakta su dökmek", "Besmele çekmek", "Elbise değiştirmek"],
+        a: "Yüzü yıkamak"
+      },
+      {
+        q: "Oruç hangi ayda farz kılınmıştır?",
+        options: ["Ramazan", "Şaban", "Recep", "Zilhicce"],
+        a: "Ramazan"
+      },
+      {
+        q: "Hac ibadeti ne zaman yapılır?",
+        options: ["Zilhicce ayında", "Ramazan ayında", "Muharrem ayında", "Recep ayında"],
+        a: "Zilhicce ayında"
+      },
+      {
+        q: "Zekât kimlere verilir?",
+        options: ["Fakirlere", "Zenginlere", "Anne babaya", "Çocuklara"],
+        a: "Fakirlere"
+      },
+      {
+        q: "Namazda kaç rekât farz vardır (günde)?",
+        options: ["17", "10", "12", "20"],
+        a: "17"
+      },
+      {
+        q: "Vitir namazı kaç rekâttır?",
+        options: ["3", "2", "4", "5"],
+        a: "3"
+      },
+      {
+        q: "Teravih namazı kaç rekâttır?",
+        options: ["20", "8", "10", "12"],
+        a: "20"
+      },
+      {
+        q: "Cuma namazı haftanın hangi günü kılınır?",
+        options: ["Cuma", "Perşembe", "Cumartesi", "Pazar"],
+        a: "Cuma"
+      },
+      {
+        q: "Bayram namazı kaç rekâttır?",
+        options: ["2", "4", "3", "5"],
+        a: "2"
+      },
+      {
+        q: "Sadaka-i fıtır ne zaman verilir?",
+        options: ["Ramazan bayramından önce", "Kurban bayramında", "Her zaman", "Recep ayında"],
+        a: "Ramazan bayramından önce"
+      },
+      {
+        q: "Kurban kesmek kimler için vaciptir?",
+        options: ["Zengin ve mukim olanlar için", "Fakirler için", "Çocuklar için", "Kadınlar için"],
+        a: "Zengin ve mukim olanlar için"
+      },
+      {
+        q: "Hacca giden kişinin yaptığı tavafın anlamı nedir?",
+        options: ["Kâbe’yi 7 kez dönmek", "Medine’de dua etmek", "Mekke’ye yürümek", "Arafat’ta beklemek"],
+        a: "Kâbe’yi 7 kez dönmek"
+      },
+      {
+        q: "Sa’y ne demektir?",
+        options: ["Safa ile Merve arasında gidip gelmektir", "Kâbe’yi tavaf etmektir", "Namaz kılmaktır", "Arafat’ta vakfe yapmaktır"],
+        a: "Safa ile Merve arasında gidip gelmektir"
+      },
+      {
+        q: "Arefe günü ne zamandır?",
+        options: ["Kurban bayramından bir gün önce", "Ramazan bayramı günü", "Zilhicce’nin 10’u", "Ramazan’ın 27’si"],
+        a: "Kurban bayramından bir gün önce"
+      },
+      {
+        q: "Mina neresidir?",
+        options: ["Kurban kesilen yerdir", "Namaz kılınan yerdir", "Zekât verilen yer", "Medine’deki mescit"],
+        a: "Kurban kesilen yerdir"
+      },
+      {
+        q: "Müzdelife vakfesi ne zaman yapılır?",
+        options: ["Arefe gecesi", "Ramazan’da", "Bayram sabahı", "Zilhicce’nin ilk günü"],
+        a: "Arefe gecesi"
+      },
+      {
+        q: "İhram neyi ifade eder?",
+        options: ["Hacca veya umreye başlamayı", "Bayram hazırlığını", "Namaza giriş tekbirini", "Oruç tutmayı"],
+        a: "Hacca veya umreye başlamayı"
+      },
+      {
+        q: "Haccın rükünlerinden biri değildir:",
+        options: ["Sadaka vermek", "Tavaf", "Arafat’ta vakfe", "İhram"],
+        a: "Sadaka vermek"
+      },
+      {
+        q: "Umre hac gibi farz mıdır?",
+        options: ["Hayır, umre sünnettir", "Evet, farzdır", "Vaciptir", "Mekruhtur"],
+        a: "Hayır, umre sünnettir"
+      },
+      {
+        q: "Kur’an-ı Kerim kaç ayda indirildi?",
+        options: ["23 yıl", "10 yıl", "5 yıl", "1 yıl"],
+        a: "23 yıl"
+      },
+      {
+        q: "Kur’an’ın ilk ayeti nedir?",
+        options: ["Oku", "Elhamdulillah", "Bismillah", "Allahü ekber"],
+        a: "Oku"
+      },
+      {
+        q: "Kur’an’ın son suresi hangisidir?",
+        options: ["Nas", "Fatiha", "İhlas", "Felak"],
+        a: "Nas"
+      },
+      {
+        q: "Hz. Muhammed’e vahiy getiren melek kimdir?",
+        options: ["Cebrail", "Mikail", "Azrail", "İsrafil"],
+        a: "Cebrail"
+      },
+      {
+        q: "İslam’da ahlakın temeli nedir?",
+        options: ["Güzel davranış ve niyet", "Zenginlik", "Güç", "Şöhret"],
+        a: "Güzel davranış ve niyet"
+      },
+      {
+        q: "Kul hakkı ne demektir?",
+        options: ["Bir insana ait olan haktır", "Sadaka", "Namaz hakkı", "Zekât"],
+        a: "Bir insana ait olan haktır"
+      },
+      {
+        q: "Gıybet nedir?",
+        options: ["Birinin arkasından kötü konuşmak", "Yalan söylemek", "Kavga etmek", "Selam vermek"],
+        a: "Birinin arkasından kötü konuşmak"
+      },
+      {
+        q: "İftira nedir?",
+        options: ["Birine yapmadığı bir şeyi isnat etmektir", "Gıybet", "Hırsızlık", "Sadaka vermek"],
+        a: "Birine yapmadığı bir şeyi isnat etmektir"
+      },
+      {
+        q: "Doğruluk İslam’da nasıl değerlendirilir?",
+        options: ["Bir fazilettir", "Önemsizdir", "Günah sayılır", "Yasaktır"],
+        a: "Bir fazilettir"
+      },
+      {
+        q: "Yalan söylemek neden kötüdür?",
+        options: ["Toplumu bozar", "Tatlıdır", "İşe yarar", "Zekâyı geliştirir"],
+        a: "Toplumu bozar"
+      },
+      {
+        q: "Adalet ne demektir?",
+        options: ["Hakkı yerine koymak", "Zengin olmak", "Zekât vermek", "Sadaka toplamak"],
+        a: "Hakkı yerine koymak"
+      },
+      {
+        q: "Sabır ne demektir?",
+        options: ["Zorluklara tahammül göstermek", "Sürekli konuşmak", "Hemen sinirlenmek", "Çok sevinmek"],
+        a: "Zorluklara tahammül göstermek"
+      },
+      {
+        q: "Şükür ne zaman yapılır?",
+        options: ["Nimet karşısında", "Sıkıntı anında", "Günah işleyince", "Kavga edince"],
+        a: "Nimet karşısında"
+      },
+      {
+        q: "Tevekkül ne demektir?",
+        options: ["Elinden geleni yapıp Allah’a güvenmek", "Yatmak", "Hiç çalışmamak", "Sadece dua etmek"],
+        a: "Elinden geleni yapıp Allah’a güvenmek"
+      },
+      {
+        q: "İsraf nedir?",
+        options: ["Gereksiz yere harcamak", "Az yemek", "Tasarruf", "Biriktirmek"],
+        a: "Gereksiz yere harcamak"
+      },
+      {
+        q: "Hz. Muhammed hangi ahlaki özelliğiyle tanınırdı?",
+        options: ["Güvenilirlik (el-Emin)", "Zenginlik", "Şiddet", "Korkaklık"],
+        a: "Güvenilirlik (el-Emin)"
+      },
+      {
+        q: "Peygamber Efendimizin doğum yeri neresidir?",
+        options: ["Mekke", "Medine", "Taif", "Kudüs"],
+        a: "Mekke"
+      },
+      {
+        q: "Hz. Muhammed’e ilk vahiy nerede gelmiştir?",
+        options: ["Hira Mağarası", "Mescid-i Haram", "Arafat", "Mina"],
+        a: "Hira Mağarası"
+      },
+      {
+        q: "İslam’ın beş şartından biri değildir:",
+        options: ["İhsan", "Namaz", "Oruç", "Zekât"],
+        a: "İhsan"
+      },
+      {
+        q: "Hz. Muhammed kaç yaşında peygamber olmuştur?",
+        options: ["40", "30", "35", "25"],
+        a: "40"
+      },
+      {
+        q: "İslam'da ilk vahiy hangi suredir?",
+        options: ["Alak Suresi", "Fatiha Suresi", "İhlas Suresi", "Nas Suresi"],
+        a: "Alak Suresi"
+      },
+      {
+        q: "Peygamber Efendimizin hicret ettiği şehir hangisidir?",
+        options: ["Medine", "Mekke", "Taif", "Kudüs"],
+        a: "Medine"
+      },
+      {
+        q: "Hz. Muhammed’in kabri nerededir?",
+        options: ["Medine", "Mekke", "Kudüs", "Bağdat"],
+        a: "Medine"
+      },
+      {
+        q: "Hz. Muhammed’in babasının adı nedir?",
+        options: ["Abdullah", "Abdulmuttalip", "Ebu Talip", "Ali"],
+        a: "Abdullah"
+      },
+      {
+        q: "Hz. Hatice kimdir?",
+        options: ["Hz. Muhammed’in eşidir", "Hz. Ayşe'nin annesi", "Bir melek", "Bir sahabi"],
+        a: "Hz. Muhammed’in eşidir"
+      },
+      {
+        q: "Hz. Muhammed’in annesi kimdir?",
+        options: ["Amine", "Hatice", "Ayşe", "Fatıma"],
+        a: "Amine"
+      },
+      {
+        q: "Kur’an-ı Kerim hangi dilde indirilmiştir?",
+        options: ["Arapça", "Türkçe", "Farsça", "İbranice"],
+        a: "Arapça"
+      },
+      {
+        q: "Hz. Muhammed’in çocuklarından biri değildir:",
+        options: ["Ömer", "Fatıma", "Kasım", "Zeynep"],
+        a: "Ömer"
+      },
+      {
+        q: "Hz. Muhammed’in en küçük çocuğu kimdir?",
+        options: ["İbrahim", "Fatıma", "Zeynep", "Rukiye"],
+        a: "İbrahim"
+      },
+      {
+        q: "Hz. Muhammed’in peygamberlik süresi kaç yıl sürmüştür?",
+        options: ["23", "13", "40", "10"],
+        a: "23"
+      },
+      {
+        q: "Peygamberimizin ilk vahiy aldığı melek kimdir?",
+        options: ["Cebrail", "Mikail", "İsrafil", "Azrail"],
+        a: "Cebrail"
+      },
+      {
+        q: "Mescid-i Nebevî hangi şehirde bulunmaktadır?",
+        options: ["Medine", "Mekke", "Kudüs", "Taif"],
+        a: "Medine"
+      },
+      {
+        q: "Hz. Muhammed’in hicret ettiği yıl hangi takvime başlangıç kabul edilir?",
+        options: ["Hicri Takvim", "Miladi Takvim", "Rumi Takvim", "Yahudi Takvimi"],
+        a: "Hicri Takvim"
+      },
+      {
+        q: "Hz. Muhammed’in en çok sevdiği torunu kimdir?",
+        options: ["Hz. Hasan ve Hz. Hüseyin", "Hz. Ali", "Hz. Zeyneb", "Hz. Kasım"],
+        a: "Hz. Hasan ve Hz. Hüseyin"
+      },
+      {
+        q: "Kur’an-ı Kerim’de kaç sure vardır?",
+        options: ["114", "110", "100", "120"],
+        a: "114"
+      },
+      {
+        q: "Kur’an’ın en uzun suresi hangisidir?",
+        options: ["Bakara", "Fatiha", "Al-i İmran", "Yasin"],
+        a: "Bakara"
+      },
+      {
+        q: "Kur’an’ın en kısa suresi hangisidir?",
+        options: ["Kevser", "İhlas", "Nas", "Fatiha"],
+        a: "Kevser"
+      },
+      {
+        q: "Kur’an’ın ilk suresi hangisidir?",
+        options: ["Fatiha", "Alak", "Bakara", "Nas"],
+        a: "Fatiha"
+      },
+      {
+        q: "Kur’an’ın anlamı nedir?",
+        options: ["Okunan şey", "Ayet", "Vahiy", "İlham"],
+        a: "Okunan şey"
+      },
+      {
+        q: "Kur’an-ı Kerim’in ana konusu nedir?",
+        options: ["Tevhid", "Tarih", "Hikaye", "Siyaset"],
+        a: "Tevhid"
+      },
+      {
+        q: "Kur’an’da yer alan kısa hikayelere ne denir?",
+        options: ["Kıssa", "Hadis", "Fetva", "Sure"],
+        a: "Kıssa"
+      },
+      {
+        q: "Kur’an’da kaç ayet vardır (yaklaşık)?",
+        options: ["6666", "114", "786", "3000"],
+        a: "6666"
+      },
+      {
+        q: "Kur’an’ı ilk defa kitap haline kim getirdi?",
+        options: ["Hz. Ebubekir", "Hz. Ömer", "Hz. Osman", "Hz. Ali"],
+        a: "Hz. Ebubekir"
+      },
+      {
+        q: "Kur’an’ı çoğaltıp çoğu yere gönderen halife kimdir?",
+        options: ["Hz. Osman", "Hz. Ebubekir", "Hz. Ömer", "Hz. Ali"],
+        a: "Hz. Osman"
+      },
+      {
+        q: "Hadis nedir?",
+        options: ["Peygamberimizin sözleri, fiilleri ve onaylarıdır", "Kur’an ayetleri", "Sahabelerin görüşleri", "Tefsirler"],
+        a: "Peygamberimizin sözleri, fiilleri ve onaylarıdır"
+      },
+      {
+        q: "Sahabe kimdir?",
+        options: ["Peygamberimizi gören ve ona iman eden kişidir", "Kur’an’ı yazanlar", "Halifeler", "Hadis yazanlar"],
+        a: "Peygamberimizi gören ve ona iman eden kişidir"
+      },
+      {
+        q: "Hz. Ayşe kimdir?",
+        options: ["Hz. Muhammed’in eşidir", "Kızıdır", "Torunudur", "Annesidir"],
+        a: "Hz. Muhammed’in eşidir"
+      },
+      {
+        q: "Hz. Fatıma kimdir?",
+        options: ["Hz. Muhammed’in kızıdır", "Eşidir", "Teyzesidir", "Torunudur"],
+        a: "Hz. Muhammed’in kızıdır"
+      },
+      {
+        q: "Hz. Ali kimdir?",
+        options: ["Hz. Muhammed’in damadı ve amcasının oğludur", "Kardeşidir", "Halifesidir", "Ashabıdır"],
+        a: "Hz. Muhammed’in damadı ve amcasının oğludur"
+      },
+      {
+        q: "Dört halifeden biri değildir:",
+        options: ["Muaviye", "Hz. Ebubekir", "Hz. Ömer", "Hz. Osman"],
+        a: "Muaviye"
+      },
+      {
+        q: "Hz. Ebubekir'in halifeliği süresi ne kadardı?",
+        options: ["2 yıl", "10 yıl", "5 yıl", "7 yıl"],
+        a: "2 yıl"
+      },
+      {
+        q: "Mekke'den Medine'ye yapılan hicrete ne ad verilir?",
+        options: ["Hicret", "İsra", "Mi'rac", "Sefer"],
+        a: "Hicret"
+      },
+      {
+        q: "İslam’a göre insanlar neden yaratılmıştır?",
+        options: ["Allah’a ibadet etmek için", "Dünya nimetlerinden faydalanmak için", "Toplumda düzen sağlamak için", "Eğlenmek için"],
+        a: "Allah’a ibadet etmek için"
+      },
+      {
+        q: "Kıyamet günü kim hesap soracaktır?",
+        options: ["Allah", "Peygamberler", "Melekler", "İnsanlar"],
+        a: "Allah"
+      },
+      {
+        q: "İslam'da Allah’a ortak koşmamak ne olarak adlandırılır?",
+        options: ["Tevhid", "Şirk", "İhsan", "Takva"],
+        a: "Tevhid"
+      },
+      {
+        q: "Peygamberimizin son hutbesi nerede gerçekleşmiştir?",
+        options: ["Veda Haccı'nda Arafat’ta", "Mekke'de", "Medine'de", "Mina’da"],
+        a: "Veda Haccı'nda Arafat’ta"
+      },
+      {
+        q: "Peygamber Efendimizin doğum yılı nedir?",
+        options: ["571", "610", "632", "570"],
+        a: "571"
+      },
+      {
+        q: "Peygamberimiz vefat ettiğinde kaç yaşındaydı?",
+        options: ["63", "60", "65", "70"],
+        a: "63"
+      },
+      {
+        q: "Kur’an’da adı geçen tek kadın kimdir?",
+        options: ["Meryem", "Hatice", "Fatıma", "Ayşe"],
+        a: "Meryem"
+      },
+      {
+        q: "Mümin ne demektir?",
+        options: ["İman eden kimse", "Namaz kılan", "İslam alimi", "Kâfirin zıttı"],
+        a: "İman eden kimse"
+      },
+      {
+        q: "İman ile amel ilişkisi hangi alana girer?",
+        options: ["İtikat", "Fıkıh", "Tefsir", "Hadis"],
+        a: "İtikat"
+      },
+      {
+        q: "Peygamberimizin hicret ettiği yıl kaçtır?",
+        options: ["622", "610", "632", "624"],
+        a: "622"
+      },
+      {
+        q: "Hz. Muhammed’e peygamberlik hangi yaşta verilmiştir?",
+        options: ["40", "25", "30", "35"],
+        a: "40"
+      },
+      {
+        q: "Allah’ın her şeyi bildiğine inanmak hangi iman esasındandır?",
+        options: ["Kadere iman", "Meleklere iman", "Ahirete iman", "Kitaplara iman"],
+        a: "Kadere iman"
+      },
+      {
+        q: "Kur’an'da kaç cüz vardır?",
+        options: ["30", "60", "114", "7"],
+        a: "30"
+      },
+      {
+        q: "İlk Müslüman erkek kimdir?",
+        options: ["Hz. Ali", "Hz. Ebubekir", "Hz. Osman", "Hz. Ömer"],
+        a: "Hz. Ali"
+      },
+      {
+        q: "Peygamberimize en çok destek olan amcası kimdir?",
+        options: ["Ebu Talip", "Abbas", "Hamza", "Abdülmuttalip"],
+        a: "Ebu Talip"
+      },
+      {
+        q: "Peygamberimizin çocuklarından sadece hangisi soyunu devam ettirmiştir?",
+        options: ["Fatıma", "Kasım", "Zeynep", "Rukiye"],
+        a: "Fatıma"
+      },
+      {
+        q: "Cebrail hangi görevle görevlidir?",
+        options: ["Vahiy getirmek", "Rüzgârı estirmek", "Yağmuru yağdırmak", "Can almak"],
+        a: "Vahiy getirmek"
+      },
+      {
+        q: "İslam’da en faziletli gece hangisidir?",
+        options: ["Kadir Gecesi", "Berat Gecesi", "Mevlid Gecesi", "Miraç Gecesi"],
+        a: "Kadir Gecesi"
+      },
+      {
+        q: "İslam’da en kutsal ay hangisidir?",
+        options: ["Ramazan", "Recep", "Şaban", "Muharrem"],
+        a: "Ramazan"
+      },
+      {
+        q: "Kıble ne tarafa yönelir?",
+        options: ["Kâbe’ye", "Medine’ye", "Mekke’ye", "Kudüs’e"],
+        a: "Kâbe’ye"
+      },
+      {
+        q: "Hz. Muhammed'in doğduğu kabile hangisidir?",
+        options: ["Kureyş", "Evs", "Hazrec", "Abdüşems"],
+        a: "Kureyş"
+      },
+      {
+        q: "Hac ibadeti İslam’ın kaçıncı şartıdır?",
+        options: ["5.", "1.", "3.", "4."],
+        a: "5."
+      },
+      {
+        q: "Zekât hangi mallardan verilmez?",
+        options: ["Kıyafet", "Altın", "Arpa", "Koyun"],
+        a: "Kıyafet"
+      },
+      {
+        q: "Namazın farzlarından biri değildir:",
+        options: ["Sadaka", "Rükû", "Kıyam", "Secde"],
+        a: "Sadaka"
+      },
+      {
+        q: "Oruç hangi ayda farz kılınmıştır?",
+        options: ["Ramazan", "Recep", "Şaban", "Muharrem"],
+        a: "Ramazan"
+      },
+      {
+        q: "Peygamberimizin soyu kime dayanır?",
+        options: ["Hz. İsmail", "Hz. Musa", "Hz. Nuh", "Hz. İshak"],
+        a: "Hz. İsmail"
+      },
+      {
+        q: "Hz. İbrahim’in oğlu kimdir?",
+        options: ["Hz. İsmail", "Hz. Musa", "Hz. Yusuf", "Hz. Yakup"],
+        a: "Hz. İsmail"
+      },
+      {
+        q: "İslam’da ilk mescit hangisidir?",
+        options: ["Kuba Mescidi", "Mescid-i Haram", "Mescid-i Aksa", "Mescid-i Nebevî"],
+        a: "Kuba Mescidi"
+      },
+      {
+        q: "Mescid-i Aksa hangi şehirde bulunur?",
+        options: ["Kudüs", "Mekke", "Medine", "Şam"],
+        a: "Kudüs"
+      },
+      {
+        q: "Ramazan Bayramı hangi ibadetin ardından gelir?",
+        options: ["Oruç", "Zekât", "Namaz", "Hac"],
+        a: "Oruç"
+      },
+      {
+        q: "Kurban Bayramı’nda yapılan ibadet hangisidir?",
+        options: ["Kurban kesmek", "Oruç", "Zekât", "Sadaka"],
+        a: "Kurban kesmek"
+      },
+      {
+        q: "Kurban kesmek hangi peygamberin sünnetidir?",
+        options: ["Hz. İbrahim", "Hz. Musa", "Hz. Adem", "Hz. Muhammed"],
+        a: "Hz. İbrahim"
+      },
+      {
+        q: "Cuma namazı kimlere farzdır?",
+        options: ["Erkeklere", "Kadınlara", "Çocuklara", "Yaşlılara"],
+        a: "Erkeklere"
+      },
+      {
+        q: "Hac ibadeti hangi ayda yapılır?",
+        options: ["Zilhicce", "Ramazan", "Muharrem", "Recep"],
+        a: "Zilhicce"
+      },
+      {
+        q: "Umre nedir?",
+        options: ["Hac mevsimi dışında yapılan hac benzeri ibadettir.", "Sadece farz bir ibadettir.", "Bayram namazıdır.", "Kurban kesmektir."],
+        a: "Hac mevsimi dışında yapılan hac benzeri ibadettir."
+      },
+      {
+        q: "Hac ibadetinin farzlarından biri nedir?",
+        options: ["Arafat’ta vakfe yapmak.", "Kurban kesmek.", "Umre yapmak.", "Kâbe’yi görmek."],
+        a: "Arafat’ta vakfe yapmak."
+      },
+      {
+        q: "Hac kimlere farzdır?",
+        options: ["Müslüman, akıllı, ergen ve gücü yeten kimselere.", "Sadece zenginlere.", "Sadece erkeklere.", "Yılda bir herkese."],
+        a: "Müslüman, akıllı, ergen ve gücü yeten kimselere."
+      },
+      {
+        q: "Hacda ihrama girmek ne demektir?",
+        options: ["Hacca başlarken bazı yasaklara girmek.", "Elbise giymek.", "Mekke’ye ulaşmak.", "Kur’an okumak."],
+        a: "Hacca başlarken bazı yasaklara girmek."
+      },
+      {
+        q: "Tavaf nedir?",
+        options: ["Kâbe’nin etrafında 7 defa dönmektir.", "Namaz kılmaktır.", "Sa’y yapmaktır.", "Kurban kesmektir."],
+        a: "Kâbe’nin etrafında 7 defa dönmektir."
+      },
+      {
+        q: "Sa’y ne demektir?",
+        options: ["Safa ile Merve arasında 7 defa gidip gelmektir.", "Kâbe etrafında dönmek.", "Namaz kılmak.", "Arafat’ta durmak."],
+        a: "Safa ile Merve arasında 7 defa gidip gelmektir."
+      },
+      {
+        q: "Hacda şeytan taşlama nerede yapılır?",
+        options: ["Mina’da", "Arafat’ta", "Mekke’de", "Medine’de"],
+        a: "Mina’da"
+      },
+      {
+        q: "Kur’an-ı Kerim’in ilk ayeti hangi surededir?",
+        options: ["Alak Suresi", "Fatiha Suresi", "Bakara Suresi", "Yasin Suresi"],
+        a: "Alak Suresi"
+      },
+      {
+        q: "Kur’an’da kaç sure vardır?",
+        options: ["114", "100", "120", "99"],
+        a: "114"
+      },
+      {
+        q: "Hadis ne demektir?",
+        options: ["Peygamberimizin sözleri, davranışları ve onaylarıdır.", "Kur’an’ın ayetleridir.", "Sahabelerin sözleridir.", "Fıkıh kitaplarıdır."],
+        a: "Peygamberimizin sözleri, davranışları ve onaylarıdır."
+      },
+      {
+        q: "Sahih hadis nedir?",
+        options: ["Güvenilir ravilerle gelen, sağlam ve doğruluğu kesin olan hadistir.", "Herhangi bir hikâyedir.", "Şiirdir.", "Kur’an ayetidir."],
+        a: "Güvenilir ravilerle gelen, sağlam ve doğruluğu kesin olan hadistir."
+      },
+      {
+        q: "Ahlak ne demektir?",
+        options: ["İnsanın iyi veya kötü huylarıdır.", "Namazın vakti.", "İlmihal kitabı.", "Kur’an’ın ismi."],
+        a: "İnsanın iyi veya kötü huylarıdır."
+      },
+      {
+        q: "İslam ahlakının kaynağı nedir?",
+        options: ["Kur’an ve Sünnettir.", "Yalnızca örf.", "Batı kitapları.", "Tarih kitapları."],
+        a: "Kur’an ve Sünnettir."
+      },
+      {
+        q: "Doğruluk hangi peygamberin özelliğidir?",
+        options: ["Hz. Muhammed (sav)", "Hz. Yusuf", "Hz. Musa", "Hz. İsa"],
+        a: "Hz. Muhammed (sav)"
+      },
+      {
+        q: "İffet ne demektir?",
+        options: ["Namus ve haya sahibi olmak.", "Zengin olmak.", "Çok konuşmak.", "Güzel yazı yazmak."],
+        a: "Namus ve haya sahibi olmak."
+      },
+      {
+        q: "Sabır ne demektir?",
+        options: ["Zorluklara dayanmak ve isyan etmemek.", "Her şeyi kabul etmek.", "Sessiz kalmak.", "Gülmek."],
+        a: "Zorluklara dayanmak ve isyan etmemek."
+      },
+      {
+        q: "Peygamberimizin ahlakı neyle tarif edilmiştir?",
+        options: ["Kur’an ile", "Şiir ile", "Tarih ile", "Hikaye ile"],
+        a: "Kur’an ile"
+      },
+      {
+        q: "Kul hakkı ne demektir?",
+        options: ["Bir insana haksızlık yapmaktan doğan sorumluluktur.", "Sadaka vermek.", "İbadet etmek.", "Dua okumak."],
+        a: "Bir insana haksızlık yapmaktan doğan sorumluluktur."
+      }     
+    ];
+
+    const positiveFeedbacks = [
+      "SIIIIIII",
+      "SII ASKIMUU",
+      "SEN EN İYİSİN",
+      "SEN EN AKILLISIN",
+      "SENİNLE ÇOK GURUR DUYUYORUM",
+      "ÇOK İYİ YAPACAKSIN",
+      "ÖDÜL OLARAK SOĞAN PATATESİNİ HAK EDİYORSUNUZ",
+      "WAAAA ASKIMM",
+      "SI😏",
+      "EN AKILLI KIZ ARKADAŞIMA SAHİBİM😏",
+      "SEKSİ VE AYRICA AKILLI😏"
+    ];
+
+    let currentQuestions = [];
+
+    function shuffleArray(arr) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+    }
+
+    function startQuiz() {
+      document.getElementById("quiz").innerHTML = "";
+      currentQuestions = questions.slice();
+      shuffleArray(currentQuestions);
+      currentQuestions = currentQuestions.slice(0, 20);
+      currentQuestions.forEach((q, i) => renderQuestion(q, i));
+    }
+
+    function renderQuestion(q, index) {
+      const container = document.getElementById("quiz");
+      const questionDiv = document.createElement("div");
+      questionDiv.className = "question";
+      const options = q.options.slice();
+      shuffleArray(options);
+      questionDiv.innerHTML = `<p><strong>${index + 1}. ${q.q}</strong></p>`;
+      const optionsDiv = document.createElement("div");
+      optionsDiv.className = "options";
+      const feedbackDiv = document.createElement("div");
+      feedbackDiv.className = "feedback";
+      options.forEach(opt => {
+        const btn = document.createElement("button");
+        btn.textContent = opt;
+        btn.onclick = () => {
+          if (btn.disabled) return;
+          if (opt === q.a) {
+            btn.classList.add("correct");
+            Array.from(optionsDiv.children).forEach(b => b.disabled = true);
+            feedbackDiv.textContent = positiveFeedbacks[Math.floor(Math.random() * positiveFeedbacks.length)];
+          } else {
+            btn.classList.add("wrong");
+            feedbackDiv.textContent = "no askimu :(, tekrar deneyin😏";
+          }
+        };
+        optionsDiv.appendChild(btn);
+      });
+      questionDiv.appendChild(optionsDiv);
+      questionDiv.appendChild(feedbackDiv);
+      container.appendChild(questionDiv);
+    }
+
+    startQuiz();
+  </script>
+</body>
+</html>
